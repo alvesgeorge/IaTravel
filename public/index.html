@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gerador de Roteiro Turístico</title>
+  <style>
+    body { font-family: Arial; margin: 40px; background: #f2f2f2; }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    input, textarea, select { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }
+    button { margin-top: 20px; padding: 10px 20px; }
+    pre { background: #fff; padding: 15px; border: 1px solid #ccc; margin-top: 20px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Gerador de Roteiro Turístico com ChatGPT</h1>
+
+  <form id="roteiroForm">
+    <label>Destino:</label>
+    <input type="text" id="destino" value="Santo André - SP - Brasil">
+    <label>Data de Início:</label>
+    <input type="date" id="dataInicio">
+    <label>Data de Fim:</label>
+    <input type="date" id="dataFim">
+    <label>Perfil dos Viajantes:</label>
+    <textarea id="perfil"></textarea>
+    <label>Preferências:</label>
+    <input type="text" id="preferencias">
+    <label>Orçamento:</label>
+    <select id="orcamento">
+      <option value="baixo">Baixo</option>
+      <option value="médio" selected>Médio</option>
+      <option value="alto">Alto</option>
+    </select>
+    <label>Restrições:</label>
+    <input type="text" id="restricoes">
+
+    <button type="button" onclick="gerarRoteiro()">Gerar Roteiro</button>
+  </form>
+
+  <h2>Roteiro JSON Gerado:</h2>
+  <pre id="resultado">Clique em "Gerar Roteiro" para começar.</pre>
+
+  <script>
+    async function gerarRoteiro() {
+      const dados = {
+        destino: document.getElementById('destino').value,
+        dataInicio: document.getElementById('dataInicio').value,
+        dataFim: document.getElementById('dataFim').value,
+        perfil: document.getElementById('perfil').value,
+        preferencias: document.getElementById('preferencias').value,
+        orcamento: document.getElementById('orcamento').value,
+        restricoes: document.getElementById('restricoes').value
+      };
+
+      document.getElementById('resultado').textContent = "Gerando roteiro, aguarde...";
+
+      const response = await fetch('/api/gerar-roteiro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      });
+
+      const data = await response.json();
+      document.getElementById('resultado').textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
